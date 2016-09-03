@@ -3,6 +3,8 @@ package com.api.aiutera.bootstarp;
 import com.api.aiutera.dao.DataSource;
 import com.api.aiutera.dao.impl.MongoDataSource;
 import com.api.aiutera.dao.provider.MongoProvider;
+import com.api.aiutera.resources.AdviserResource;
+import com.api.aiutera.resources.CategoryResource;
 import com.api.aiutera.resources.UserResource;
 import com.google.inject.Binder;
 import com.google.inject.Module;
@@ -23,6 +25,12 @@ public class ApplicationModule implements Module {
     public void configure(final Binder binder) {
         // binding the User Resource
         binder.bind(UserResource.class);
+
+        // binding the Advisor Resource
+        binder.bind(AdviserResource.class);
+
+        // binding the Category Resource
+        binder.bind(CategoryResource.class);
 
         // binding mongodb client
         binder.bind(MongoProvider.class).in(Singleton.class);

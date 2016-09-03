@@ -2,6 +2,8 @@ package com.api.aiutera.resources;
 
 import com.api.aiutera.bean.MongoDocument;
 import com.api.aiutera.dao.impl.MongoDataSource;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import com.google.inject.Inject;
 
 import javax.ws.rs.Consumes;
@@ -43,8 +45,12 @@ public class AdviserResource {
         // setting the document to be loaded
         document.setDocument(form.get("payload").get(0));
 
+        JsonParser jsonParser = new JsonParser();
+        JsonElement element = jsonParser.parse(form.get("payload").get(0));
+
         // loading this data to mongodb
-        boolean flag = mds.create(document, form.get("user_name").get(0));
+        boolean flag = mds.create(document,
+                element.getAsJsonObject().get("email").getAsString());
 
         String result = "Adviser payload : " + form.get("payload").get(0)+ " - Status: " + flag;
         return Response.status(200).entity(result).build();

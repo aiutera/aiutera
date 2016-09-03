@@ -58,7 +58,14 @@ public class MongoDataSource implements DataSource {
         return false;
     }
 
-    public FindIterable<Document> search(MongoDocument document) throws Exception {
+    /**
+     * Need to change the return type to generics
+     *
+     * @param document
+     * @return
+     * @throws Exception
+     */
+    public FindIterable<Document> search(MongoDocument document) {
 
         // getting the mongodb connection
         MongoDatabase db = mongoProvider.get().getDatabase(document.getDbname());
@@ -68,6 +75,6 @@ public class MongoDataSource implements DataSource {
 
         // getting all the document from the collection based on the where condition
         //BasicDBObject whereQuery = new BasicDBObject();
-        FindIterable<Document> cursor = coll.find();
+        return coll.find();
     }
 }
