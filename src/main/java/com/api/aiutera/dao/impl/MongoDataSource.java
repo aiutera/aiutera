@@ -25,25 +25,42 @@ public class MongoDataSource implements DataSource {
         this.mongoProvider = mp;
     }
 
-    public boolean create(MongoDocument document, String id) {
-        try {
+    /**
+     * @param document
+     * @param id
+     * @return
+     */
+    public void create(MongoDocument document, String id) throws MongoException{
+        // getting the mongodb connection
+        MongoDatabase db = mongoProvider.get().getDatabase(document.getDbname());
 
-            // getting the mongodb connection
-            MongoDatabase db = mongoProvider.get().getDatabase(document.getDbname());
+        // getting the collection name
+        MongoCollection<Document> coll = db.getCollection(document.getCollection());
 
-            // getting the collection name
-            MongoCollection<Document> coll = db.getCollection(document.getCollection());
+        // converting the json into DBObject
+        DBObject dbObject = (DBObject) JSON.parse(document.getDocument());
 
-            // converting the json into DBObject
-            DBObject dbObject = (DBObject) JSON.parse(document.getDocument());
+        // adding the user id as document id
+        dbObject.put("_id", id);
+        coll.insertOne(new Document(dbObject.toMap()));
+    }
 
-            // adding the user id as document id
-            dbObject.put("_id", id);
-            coll.insertOne(new Document(dbObject.toMap()));
-        } catch (MongoWriteException mwe) {
-            return false;
-        }
-        return true;
+    /**
+     * @param document
+     * @return
+     */
+    public void create(MongoDocument document) throws MongoException {
+
+        // getting the mongodb connection
+        MongoDatabase db = mongoProvider.get().getDatabase(document.getDbname());
+
+        // getting the collection name
+        MongoCollection<Document> coll = db.getCollection(document.getCollection());
+
+        // converting the json into DBObject
+        DBObject dbObject = (DBObject) JSON.parse(document.getDocument());
+
+        coll.insertOne(new Document(dbObject.toMap()));
     }
 
     public boolean update() {
@@ -65,7 +82,7 @@ public class MongoDataSource implements DataSource {
      * @return
      * @throws Exception
      */
-    public FindIterable<Document> search(MongoDocument document) {
+    public FindIterable<Document> search(MongoDocument document) throws MongoException {
 
         // getting the mongodb connection
         MongoDatabase db = mongoProvider.get().getDatabase(document.getDbname());

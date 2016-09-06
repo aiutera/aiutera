@@ -15,7 +15,14 @@ public interface DataSource {
      * @return
      */
     // TODO: Object should be generic
-    boolean create(MongoDocument userInfo, String id);
+    void create(MongoDocument document, String id);
+
+    /**
+     * Method: create
+     * @return
+     */
+    // TODO: Object should be generic
+    void create(MongoDocument document);
 
     /**
      *

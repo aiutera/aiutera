@@ -1,0 +1,155 @@
+User API:
+---- ---
+
+Register URL: http://localhost:8080/aiutera/user/register?v=1.0
+
+Request:
+Type: POST
+x-www-form-urlencoded
+
+payload={"email_id":"muruganmscit@gmail.com", "phone_nunber" : "xxx-xxx-xxxx", "password" : "encrypted_password"}
+
+Response:
+Success:
+{
+	"status" : {
+		"status" : "success",
+		"code" : "200",
+		"message" : "User Created",
+		"totalTime" : 12345 
+	}
+}
+
+Failure:
+{
+	"status" : {
+		"status" : "failed",
+		"code" : "400",
+		"message" : "Reason for Failure",
+		"totalTime" : 12345 
+	}
+}
+
+Adviser API:
+------- ---
+
+Register URL: http://localhost:8080/aiutera/adviser/register?v=1.0
+-------- ---
+
+Request:
+Type: POST
+x-www-form-urlencoded
+
+payload={"email_id":"muruganmscit@gmail.com","phone_nunber":"xxx-xxx-xxxx","password":"encrypted_password","company_name":"ABC","address_1":"test1","address_2":"test2","city":"Phoenix","country":"US","zipcde":"85055","phone":"xxx-xxx-xxxx","qualification":"degree","lic_number":"1223-xx-212","category":[{"name":"category_1","sub_category":[{"sub_name":"sub_category_1"},{"sub_name":"sub_category_2"}]},{"name":"category_2","sub_category":[{"sub_name":"sub_category_3"},{"sub_name":"sub_category_4"}]}],"languages":["english","spanish"],"price":"12.0","web_page":"","facebook":"","twiter":""}
+
+Response:
+Success:
+{
+	"status" : {
+		"status" : "success",
+		"code" : "200",
+		"message" : "Advisor Created",
+		"totalTime" : 12345 
+	}
+}
+
+Failure:
+{
+	"status" : {
+		"status" : "failed",
+		"code" : "400",
+		"message" : "Reason for Failure",
+		"totalTime" : 12345 
+	}
+}
+
+Set Availability: http://localhost:8080/aiutera/adviser/setAvailability?v=1.0
+--- ------------
+Request:
+Type: POST
+x-www-form-urlencoded
+
+payload={"email_id":"muruganmscit@gmail.com","available":true/false}
+
+Response:
+Success:
+{
+	"status" : {
+		"status" : "success",
+		"code" : "200",
+		"message" : "Avaiability Set",
+		"totalTime" : 12345 
+	}
+}
+
+Failure:
+{
+	"status" : {
+		"status" : "failed",
+		"code" : "400",
+		"message" : "Reason for Failure",
+		"totalTime" : 12345 
+	}
+}
+
+Category API:
+-------- ---
+
+http://localhost:8080/aiutera/category/?v=1.0
+
+Request:
+Type: POST
+
+Response:
+Success:
+{
+  "status": {
+    "status": "success",
+    "code": "200",
+    "message": "Categories",
+    "totalTime": 12345
+  },
+  "data": {
+    "categories": [
+      {
+        "name": "Home",
+        "img": "url",
+        "subcategory": [
+          {
+            "name": "plumbing",
+            "img": "url"
+          },
+          {
+            "name": "Interior Design",
+            "img": "url"
+          }
+        ]
+      },
+      {
+        "name": "Home",
+        "img": "url",
+        "subcategory": [
+          {
+            "name": "plumbing",
+            "img": "url"
+          },
+          {
+            "name": "Interiordesign",
+            "img": "url"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+Failure:
+-------
+{
+	"status" : {
+		"status" : "failed",
+		"code" : "400",
+		"message" : "Reason for Failure",
+		"totalTime" : 12345 
+	}
+}

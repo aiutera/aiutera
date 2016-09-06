@@ -15,6 +15,10 @@
         </repository>
     </repositories>
 
+    <properties>
+        <swagger-version>1.5.10</swagger-version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.jboss.resteasy</groupId>
@@ -41,6 +45,19 @@
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
             <version>2.3.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-jaxrs</artifactId>
+            <version>${swagger-version}</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.codehaus.jettison</groupId>
+            <artifactId>jettison</artifactId>
+            <version>1.3.7</version>
         </dependency>
     </dependencies>
 
