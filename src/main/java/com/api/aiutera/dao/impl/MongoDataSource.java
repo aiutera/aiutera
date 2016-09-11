@@ -1,6 +1,7 @@
 package com.api.aiutera.dao.impl;
 
 import com.api.aiutera.bean.MongoDocument;
+import com.api.aiutera.constants.Aiutera;
 import com.api.aiutera.dao.DataSource;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -31,8 +32,16 @@ public class MongoDataSource implements DataSource {
      * @return
      */
     public void create(MongoDocument document, String id) throws MongoException{
+
         // getting the mongodb connection
-        MongoDatabase db = mongoProvider.get().getDatabase(document.getDbname());
+        //MongoDatabase db = mongoProvider.get().getDatabase(document.getDbname());
+
+        MongoClient mc = new MongoClient(new ServerAddress(Aiutera.MONGODB_SERVER), new MongoClientOptions.Builder().build());
+        System.out.println("Connection getting created.");
+
+        // getting the collection name
+        //MongoCollection<Document> coll = db.getCollection(document.getCollection());
+        MongoDatabase db = mc.getDatabase(document.getDbname());
 
         // getting the collection name
         MongoCollection<Document> coll = db.getCollection(document.getCollection());
@@ -52,7 +61,14 @@ public class MongoDataSource implements DataSource {
     public void create(MongoDocument document) throws MongoException {
 
         // getting the mongodb connection
-        MongoDatabase db = mongoProvider.get().getDatabase(document.getDbname());
+        //MongoDatabase db = mongoProvider.get().getDatabase(document.getDbname());
+
+        MongoClient mc = new MongoClient(new ServerAddress(Aiutera.MONGODB_SERVER), new MongoClientOptions.Builder().build());
+        System.out.println("Connection getting created.");
+
+        // getting the mongodb connection
+        //MongoDatabase db = mongoProvider.get().getDatabase(document.getDbname());
+        MongoDatabase db = mc.getDatabase(document.getDbname());
 
         // getting the collection name
         MongoCollection<Document> coll = db.getCollection(document.getCollection());
@@ -63,8 +79,30 @@ public class MongoDataSource implements DataSource {
         coll.insertOne(new Document(dbObject.toMap()));
     }
 
-    public boolean update() {
-        return false;
+    /**
+     * Method for updating a specific document in mongodb
+     *
+     * @param document
+     * @param id
+     */
+    public void update(MongoDocument document, String id) {
+
+        // getting the mongodb connection
+        //MongoDatabase db = mongoProvider.get().getDatabase(document.getDbname());
+
+        MongoClient mc = new MongoClient(new ServerAddress(Aiutera.MONGODB_SERVER), new MongoClientOptions.Builder().build());
+
+        // getting the collection name
+        //MongoCollection<Document> coll = db.getCollection(document.getCollection());
+        MongoDatabase db = mc.getDatabase(document.getDbname());
+
+        // getting the collection name
+        MongoCollection<Document> coll = db.getCollection(document.getCollection());
+
+        // converting the json into DBObject
+        DBObject dbObject = (DBObject) JSON.parse(document.getDocument());
+
+        coll.updateOne(new Document("_id",  id), new Document("$set", new Document(dbObject.toMap())));
     }
 
     public Object read(String id) {
@@ -84,8 +122,12 @@ public class MongoDataSource implements DataSource {
      */
     public FindIterable<Document> search(MongoDocument document) throws MongoException {
 
+        MongoClient mc = new MongoClient(new ServerAddress(Aiutera.MONGODB_SERVER), new MongoClientOptions.Builder().build());
+        System.out.println("Connection getting created.");
+
         // getting the mongodb connection
-        MongoDatabase db = mongoProvider.get().getDatabase(document.getDbname());
+        //MongoDatabase db = mongoProvider.get().getDatabase(document.getDbname());
+        MongoDatabase db = mc.getDatabase(document.getDbname());
 
         // getting the collection name
         MongoCollection<Document> coll = db.getCollection(document.getCollection());

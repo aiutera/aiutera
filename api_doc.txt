@@ -1,0 +1,304 @@
+User API:
+---- ---
+
+Register URL: http://aiutera-env.us-west-2.elasticbeanstalk.com/user/register?v=1.0
+
+Request:
+Type: POST
+x-www-form-urlencoded
+
+payload={"email_id":"muruganmscit@gmail.com", "phone_nunber" : "xxx-xxx-xxxx", "password" : "encrypted_password"}
+
+Response:
+Success:
+{
+	"status" : {
+		"status" : "success",
+		"code" : "200",
+		"message" : "User Created",
+		"totalTime" : 12345 
+	}
+}
+
+Failure:
+{
+	"status" : {
+		"status" : "failed",
+		"code" : "400",
+		"message" : "Reason for Failure",
+		"totalTime" : 12345 
+	}
+}
+
+Adviser API:
+------- ---
+
+Register URL: http://aiutera-env.us-west-2.elasticbeanstalk.com/adviser/register?v=1.0
+-------- ---
+
+Request:
+Type: POST
+x-www-form-urlencoded
+
+payload={"email_id":"muruganmscit@gmail.com","phone_nunber":"xxx-xxx-xxxx","password":"encrypted_password","company_name":"ABC","address_1":"test1","address_2":"test2","city":"Phoenix","country":"US","zipcde":"85055","phone":"xxx-xxx-xxxx","qualification":"degree","lic_number":"1223-xx-212","category":[{"name":"category_1","sub_category":[{"sub_name":"sub_category_1"},{"sub_name":"sub_category_2"}]},{"name":"category_2","sub_category":[{"sub_name":"sub_category_3"},{"sub_name":"sub_category_4"}]}],"languages":["english","spanish"],"price":"12.0","web_page":"","facebook":"","twiter":""}
+
+Response:
+Success:
+{
+	"status" : {
+		"status" : "success",
+		"code" : "200",
+		"message" : "Advisor Created",
+		"totalTime" : 12345 
+	}
+}
+
+Failure:
+{
+	"status" : {
+		"status" : "failed",
+		"code" : "400",
+		"message" : "Reason for Failure",
+		"totalTime" : 12345 
+	}
+}
+
+Update URL: http://aiutera-env.us-west-2.elasticbeanstalk.com/adviser/update?v=1.0
+------ ---
+
+NOTE: email_id should be part of the JSON since that is our key
+
+Request:
+Type: POST
+x-www-form-urlencoded
+
+payload={"email_id":"muruganmscit@gmail.com", "company_name":"ABC","address_1":"test1","address_2":"test2","city":"Phoenix","country":"US","zipcde":"85055","phone":"xxx-xxx-xxxx","qualification":"degree","lic_number":"1223-xx-212","category":[{"name":"category_1","sub_category":[{"sub_name":"sub_category_1"},{"sub_name":"sub_category_2"}]},{"name":"category_2","sub_category":[{"sub_name":"sub_category_3"},{"sub_name":"sub_category_4"}]}],"languages":["english","spanish"],"price":"12.0","web_page":"","facebook":"","twiter":""}
+
+Response:
+Success:
+{
+	"status" : {
+		"status" : "success",
+		"code" : "200",
+		"message" : "Adviser Created",
+		"totalTime" : 12345
+	}
+}
+
+Failure:
+{
+	"status" : {
+		"status" : "failed",
+		"code" : "400",
+		"message" : "Reason for Failure",
+		"totalTime" : 12345
+	}
+}
+
+Set Availability: http://aiutera-env.us-west-2.elasticbeanstalk.com/adviser/setAvailability?v=1.0
+--- ------------
+Request:
+Type: POST
+x-www-form-urlencoded
+
+payload={"email_id":"muruganmscit@gmail.com","available":true/false}
+
+Response:
+Success:
+{
+	"status" : {
+		"status" : "success",
+		"code" : "200",
+		"message" : "Avaiability Set",
+		"totalTime" : 12345 
+	}
+}
+
+Failure:
+{
+	"status" : {
+		"status" : "failed",
+		"code" : "400",
+		"message" : "Reason for Failure",
+		"totalTime" : 12345 
+	}
+}
+
+Search URL: http://aiutera-env.us-west-2.elasticbeanstalk.com/adviser/search?v=1.0
+------ ---
+
+Request:
+Type: POST
+x-www-form-urlencoded
+
+payload={"city":"Phoenix","sub_category":""}
+
+Response:
+Success:
+{
+  "status": {
+    "status": "success",
+    "code": "200",
+    "message": "Advisers list",
+    "totalTime": 12345
+  },
+  "advisers": [
+    {
+      "name": "John Smith",
+      "company_name": "ABC",
+      "city": "Phoenix",
+      "phone": "xxx-xxx-xxxx",
+      "qualification": "degree",
+      "rating": 4,
+      "languages": [
+        "english",
+        "spanish"
+      ],
+      "price": "12.0",
+      "web_page": "",
+      "facebook": "",
+      "twiter": "",
+      "email_id": ""
+    },
+    {
+      "name": "John Smith",
+      "company_name": "ABC",
+      "city": "Phoenix",
+      "phone": "xxx-xxx-xxxx",
+      "qualification": "degree",
+      "rating": 4,
+      "languages": [
+        "english",
+        "spanish"
+      ],
+      "price": "12.0",
+      "web_page": "",
+      "facebook": "",
+      "twiter": "",
+      "email_id": ""
+    },
+    {
+      "name": "John Smith",
+      "company_name": "ABC",
+      "city": "Phoenix",
+      "phone": "xxx-xxx-xxxx",
+      "qualification": "degree",
+      "rating": 4,
+      "languages": [
+        "english",
+        "spanish"
+      ],
+      "price": "12.0",
+      "web_page": "",
+      "facebook": "",
+      "twiter": "",
+      "email_id": ""
+    }
+  ]
+}
+
+Failure:
+{
+	"status" : {
+		"status" : "failed",
+		"code" : "400",
+		"message" : "Reason for Failure",
+		"totalTime" : 12345
+	}
+}
+
+Category API:
+-------- ---
+
+http://aiutera-env.us-west-2.elasticbeanstalk.com/category/?v=1.0
+
+Request:
+Type: GET
+
+Response:
+Success:
+{
+  "status": {
+    "status": "success",
+    "code": "200",
+    "message": "Categories",
+    "totalTime": 12345
+  },
+  "data": {
+    "categories": [
+      {
+        "name": "Home",
+        "img": "url",
+        "subcategory": [
+          {
+            "name": "plumbing",
+            "img": "url"
+          },
+          {
+            "name": "Interior Design",
+            "img": "url"
+          }
+        ]
+      },
+      {
+        "name": "Home",
+        "img": "url",
+        "subcategory": [
+          {
+            "name": "plumbing",
+            "img": "url"
+          },
+          {
+            "name": "Interiordesign",
+            "img": "url"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+Failure:
+-------
+{
+	"status" : {
+		"status" : "failed",
+		"code" : "400",
+		"message" : "Reason for Failure",
+		"totalTime" : 12345 
+	}
+}
+
+
+Rating:
+------
+
+Rating URL: http://aiutera-env.us-west-2.elasticbeanstalk.com/rating/?v=1.0
+------ ---
+
+Request:
+Type: POST
+x-www-form-urlencoded
+
+payload={"user_id":"test@gmail.com","adviser_id":"test@gmail.com","rating":[{"question":"category_1","answer":"category_1"},{"question":"category_1","answer":"category_1"}]}
+
+Response:
+Success:
+{
+	"status" : {
+		"status" : "success",
+		"code" : "200",
+		"message" : "Avaiability Set",
+		"totalTime" : 12345
+	}
+}
+
+Failure:
+{
+	"status" : {
+		"status" : "failed",
+		"code" : "400",
+		"message" : "Reason for Failure",
+		"totalTime" : 12345
+	}
+}

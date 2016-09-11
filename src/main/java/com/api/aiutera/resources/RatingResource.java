@@ -8,7 +8,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.google.inject.Inject;
 import com.mongodb.MongoException;
-import io.swagger.annotations.*;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -20,30 +22,25 @@ import javax.ws.rs.core.Response;
 import java.io.IOException;
 
 /**
- * Created by Bala on 8/25/16.
- * <p>
- * Class for handling Users related actions such as adding,
- * modifying, deleting and retrieving the user information
- * from & to the Data source
+ * Created by Bala on 9/11/16.
  */
-@Path("/user")
-@Api(value = "/user", description = "Operations about user")
-public class UserResource {
+@Path("/rating")
+public class RatingResource {
 
     private MongoDataSource mds;
 
     @Inject
-    private UserResource(final MongoDataSource mds) {
+    private RatingResource(final MongoDataSource mds) {
         this.mds = mds;
     }
 
     @POST
-    @Path("/register")
-    @ApiOperation(value = "User Registration",
+    @Path("/")
+    @ApiOperation(value = "Adviser Rating",
             response = Status.class)
     @Consumes("application/x-www-form-urlencoded")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiResponses({@ApiResponse(code = 400, message = "Invalid User Details")})
+    @ApiResponses({@ApiResponse(code = 400, message = "Invalid Adviser Details")})
     public Response registerUsers(@QueryParam("v") String version, MultivaluedMap<String, String> form)
             throws IOException, JSONException {
         // Getting the Staring time
@@ -52,7 +49,6 @@ public class UserResource {
         // Setting the response object
         JSONObject response = new JSONObject();
         ObjectMapper mapper = new ObjectMapper();
-        //mapper.configure(SerializationConfig.Feature.FAIL_ON_EMPTY_BEANS, false);
 
         // Object for holding the status
         Status status = new Status();
@@ -62,7 +58,7 @@ public class UserResource {
 
         // Setting mongodb details
         document.setDbname("aiutera");
-        document.setCollection("users");
+        document.setCollection("ratings");
 
         JsonParser jsonParser = new JsonParser();
         JsonElement element = jsonParser.parse(form.get("payload").get(0));
@@ -75,8 +71,7 @@ public class UserResource {
 
         // loading this data to mongodb
         try {
-            mds.create(document,
-                    element.getAsJsonObject().get("email_id").getAsString());
+            mds.create(document);
         } catch (MongoException me) {
             status.setStatus("failed");
             status.setCode(me.getCode() + "");
@@ -87,18 +82,5 @@ public class UserResource {
         response.put("status", new JSONObject(mapper.writeValueAsString(status)));
 
         return Response.status(200).entity(response.toString()).build();
-    }
-
-    @GET
-    @Path("/{username}")
-    @ApiOperation(value = "Get user by user name",
-            response = Status.class,
-            position = 0)
-    @ApiResponses(value = {
-            @ApiResponse(code = 400, message = "Invalid username supplied"),
-            @ApiResponse(code = 404, message = "User not found")})
-    public Response getUserByName(
-            @ApiParam(value = "The name that needs to be fetched. Use user1 for testing. ", required = true) @PathParam("username") String username) {
-        return Response.status(200).entity("").build();
     }
 }

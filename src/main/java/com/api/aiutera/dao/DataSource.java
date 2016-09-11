@@ -28,7 +28,7 @@ public interface DataSource {
      *
      * @return
      */
-    boolean update();
+    void update(MongoDocument document, String id);
 
     /**
      *
