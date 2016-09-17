@@ -8,8 +8,11 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.google.inject.Inject;
 import com.mongodb.MongoException;
+import com.mongodb.client.FindIterable;
+import org.bson.Document;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.SerializationConfig;
+import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
@@ -18,6 +21,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Bala on 8/27/16.
@@ -193,9 +198,58 @@ public class AdviserResource {
     @Path("/search")
     @Consumes("application/x-www-form-urlencoded")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getAdviser(@QueryParam("v") String version, MultivaluedMap<String, String> form) {
+    public Response getAdviser(@QueryParam("v") String version, MultivaluedMap<String, String> form) throws Exception {
 
-        String json = "{\"status\":{\"status\":\"success\",\"code\":\"200\",\"message\":\"Advisers list\",\"totalTime\":12345},\"advisers\":[{\"name\":\"John Smith\",\"company_name\":\"ABC\",\"city\":\"Phoenix\",\"phone\":\"xxx-xxx-xxxx\",\"qualification\":\"degree\",\"rating\":4,\"languages\":[\"english\",\"spanish\"],\"price\":\"12.0\",\"web_page\":\"\",\"facebook\":\"\",\"twiter\":\"\",\"email_id\":\"\"},{\"name\":\"John Smith\",\"company_name\":\"ABC\",\"city\":\"Phoenix\",\"phone\":\"xxx-xxx-xxxx\",\"qualification\":\"degree\",\"rating\":4,\"languages\":[\"english\",\"spanish\"],\"price\":\"12.0\",\"web_page\":\"\",\"facebook\":\"\",\"twiter\":\"\",\"email_id\":\"\"},{\"name\":\"John Smith\",\"company_name\":\"ABC\",\"city\":\"Phoenix\",\"phone\":\"xxx-xxx-xxxx\",\"qualification\":\"degree\",\"rating\":4,\"languages\":[\"english\",\"spanish\"],\"price\":\"12.0\",\"web_page\":\"\",\"facebook\":\"\",\"twiter\":\"\",\"email_id\":\"\"}]}";
-        return Response.status(200).entity(json).build();
+        // Getting the Staring time
+        long currTime = System.nanoTime();
+        JSONArray data = new JSONArray();
+
+        // Setting the response object
+        JSONObject response = new JSONObject();
+        ObjectMapper mapper = new ObjectMapper();
+        //mapper.configure(SerializationConfig.Feature.FAIL_ON_EMPTY_BEANS, false);
+
+        // Object for holding the status
+        Status status = new Status();
+
+        // Creating the Mongo Document
+        MongoDocument document = new MongoDocument();
+
+        // Setting mongodb details
+        document.setDbname("aiutera");
+        document.setCollection("adviser");
+
+        JsonParser jsonParser = new JsonParser();
+        JsonElement element = jsonParser.parse(form.get("payload").get(0));
+
+        // setting the document to be loaded
+        document.setDocument(element.getAsJsonObject().toString());
+
+        // Since category will have only records
+        // getting the category from collation
+        try {
+            FindIterable<Document> records = mds.search(document);
+            for (Document doc : records) {
+                // removing the _id tag
+                doc.remove("_id");
+                doc.remove("category");
+                doc.remove("updated_timestamp");
+                doc.remove("created_timestap");
+                doc.remove("password");
+                // converting the object to json
+                data.put(new JSONObject(doc.toJson()));
+            }
+            response.put("data", data);
+        } catch (MongoException me) {
+            status.setStatus("failed");
+            status.setCode(me.getCode() + "");
+            status.setMessage(me.getMessage());
+        }
+
+        status.setTotalTime(CommonFunctions.getTimeDiff(currTime));
+        response.put("status", new JSONObject(mapper.writeValueAsString(status)));
+
+        return Response.status(200).entity(response.toString()).build();
+
     }
 }

@@ -1,6 +1,7 @@
 package com.api.aiutera.dao;
 
 import com.api.aiutera.bean.MongoDocument;
+import org.codehaus.jettison.json.JSONException;
 
 /**
  * Created by Bala on 8/25/16.
@@ -46,5 +47,5 @@ public interface DataSource {
      *
      * @return
      */
-    Object search(MongoDocument userInfo);
+    Object search(MongoDocument userInfo) throws JSONException;
 }

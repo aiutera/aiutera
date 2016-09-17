@@ -3,6 +3,9 @@ package com.api.aiutera.dao.impl;
 import com.api.aiutera.bean.MongoDocument;
 import com.api.aiutera.constants.Aiutera;
 import com.api.aiutera.dao.DataSource;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.mongodb.*;
@@ -11,6 +14,11 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.util.JSON;
 import org.bson.Document;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
+
+import java.util.Iterator;
+import java.util.regex.Pattern;
 
 /**
  * Created by Bala on 8/25/16.
@@ -120,10 +128,13 @@ public class MongoDataSource implements DataSource {
      * @return
      * @throws Exception
      */
-    public FindIterable<Document> search(MongoDocument document) throws MongoException {
+    public FindIterable<Document> search(MongoDocument document) throws MongoException, JSONException {
 
         MongoClient mc = new MongoClient(new ServerAddress(Aiutera.MONGODB_SERVER), new MongoClientOptions.Builder().build());
         System.out.println("Connection getting created.");
+
+
+        Document d = null;
 
         // getting the mongodb connection
         //MongoDatabase db = mongoProvider.get().getDatabase(document.getDbname());
@@ -132,8 +143,22 @@ public class MongoDataSource implements DataSource {
         // getting the collection name
         MongoCollection<Document> coll = db.getCollection(document.getCollection());
 
+        // checking for document
+        if(!document.getDocument().equalsIgnoreCase("")) {
+            d = new Document();
+            JSONObject json = new JSONObject(document.getDocument());
+            Iterator<String> keys = json.keys();
+            while(keys.hasNext()) {
+                String key = keys.next();
+                d.append(key, Pattern.compile(".*" +json.get(key)+ ".*" , Pattern.CASE_INSENSITIVE));
+            }
+        }
+
         // getting all the document from the collection based on the where condition
-        //BasicDBObject whereQuery = new BasicDBObject();
-        return coll.find();
+        if(null == d) {
+            return coll.find();
+        } else {
+            return coll.find(d);
+        }
     }
 }
